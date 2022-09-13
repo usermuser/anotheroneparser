@@ -1,0 +1,7 @@
+
+
+1. pip install aiofiles
+
+2. pip install aiohttp[speedups]
+
+3. from bs4 import BeautifulSoup
