@@ -1,13 +1,31 @@
 import asyncio
 import pathlib
 
+import typing
 import aiofiles
 from aiohttp import ClientSession
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
+from urllib.parse import urlparse
+
+
+def is_absolute(url):
+    return bool(urlparse(url).netloc)
+
 
 urls_todo = ['https://docs.python.org/3/']
 urls_seen = set()
 depth = 3
+
+
+def is_valid_url(url: str) -> bool:
+    if isinstance(url, str) and is_absolute(url):
+        return True
+    return False
+
+def extract_url(obj_: typing.Optional[Tag, str]) -> str:
+    if isinstance(obj_, Tag):
+        return obj_['href']
+    return obj_
 
 
 async def write(html: str, filename='test.html'):
@@ -27,7 +45,7 @@ async def fetch_html(url: str, session: ClientSession, **kwargs) -> str:
 
 async def add_urls(urls, dest: set) -> None:
     for url in urls:
-        dest.add(url)
+        dest.add(url['href'])
 
 
 def get_urls(page):  # cpu bound task, runs synchronously
@@ -45,6 +63,8 @@ async def main():
 
         url = urls_todo.pop()
         async with ClientSession() as session:
+            if not is_valid_url(url):
+                continue
             page = await fetch_html(url, session)
             # await write(html=page, filename=f"{depth}_{url}.html")
             # await write(html=page, filename=f"{i}.html")
