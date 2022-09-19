@@ -22,13 +22,17 @@ class JsonFetcher:
     pass
 
 
+class XmlFetcher:
+    pass
+
+
 class HtmlFetcher:
     """todo docstring missing
 
-    content_type = DataType.get_type()  # sync
-    urls = UrlsGetter.get_url(page, content_type)  # sync
-    urls_saver = RedisSaver().save()  # can be CsvSaver().save()
-    queue = SimpleDequeue().add(urls)
+    type = DataType.get_type()                          # sync
+    new_urls = UrlsGetter.get_url(page, content_type)   # sync
+    urls_saver = RedisSaver().save(new_urls)            # can be CsvSaver().save()   # async
+    dq = SimpleDequeue().add(urls)                      # can be both
     """
 
     def fetch(self):
