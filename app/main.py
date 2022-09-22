@@ -22,6 +22,7 @@ def is_valid_url(url: str) -> bool:
         return True
     return False
 
+
 def extract_url(obj_: typing.Optional[Tag, str]) -> str:
     if isinstance(obj_, Tag):
         return obj_['href']
